@@ -30,8 +30,11 @@ public class MainViewModel : INotifyPropertyChanged
         get => this.displayDateTime;
         private set
         {
-            this.displayDateTime = value;
-            this.OnPropertyChanged();
+            if (this.displayDateTime.CompareTo(value) != 0)
+            {
+                this.displayDateTime = value;
+                this.OnPropertyChanged();
+            }
         }
     }
 
@@ -40,8 +43,11 @@ public class MainViewModel : INotifyPropertyChanged
         get => this.fontColor;
         private set
         {
-            this.fontColor = value;
-            this.OnPropertyChanged();
+            if (this.fontColor != value)
+            {
+                this.fontColor = value;
+                this.OnPropertyChanged();
+            }
         }
     }
 
@@ -62,6 +68,10 @@ public class MainViewModel : INotifyPropertyChanged
         if (now.TimeOfDay.CompareTo(this.checkTime) >= 0)
         {
             this.FontColor = Brushes.DeepSkyBlue;
+        }
+        else
+        {
+            this.FontColor = Brushes.White;
         }
     }
 
