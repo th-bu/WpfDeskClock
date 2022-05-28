@@ -11,16 +11,17 @@ public class MainViewModel : INotifyPropertyChanged
 {
     private readonly DispatcherTimer timer = new();
     private readonly TimeSpan checkTime;
-    private DateTime displayDateTime = DateTime.Now;
+    private DateTime displayDateTime;
     private Brush fontColor = Brushes.White;
 
     public MainViewModel()
     {
         this.FontFamily = new FontFamily(ConfigurationManager.AppSettings["Font"] ?? "Segoe UI");
         this.checkTime = TimeSpan.Parse(ConfigurationManager.AppSettings["CheckTime"] ?? "09:16:00");
+        this.SetTimeAndFontColor();
 
         this.timer.Tick += this.TimerTick;
-        this.timer.Interval = new TimeSpan(0, 0, 1);
+        this.timer.Interval = new TimeSpan(0, 0, 0, 0, 250);
         this.timer.Start();
     }
 
@@ -50,10 +51,15 @@ public class MainViewModel : INotifyPropertyChanged
 
     private void TimerTick(object? sender, EventArgs e)
     {
+        this.SetTimeAndFontColor();
+    }
+
+    private void SetTimeAndFontColor()
+    {
         DateTime now = DateTime.Now;
         this.DisplayDateTime = now;
 
-        if (now.Hour >= this.checkTime.Hours && now.Minute >= this.checkTime.Minutes && now.Second >= this.checkTime.Seconds)
+        if (now.TimeOfDay.CompareTo(this.checkTime) >= 0)
         {
             this.FontColor = Brushes.DeepSkyBlue;
         }
